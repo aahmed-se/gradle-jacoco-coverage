@@ -1,4 +1,4 @@
-package com.palantir.jacoco;
+package com.gradle.jacoco.gitdiff.diffparse;
 
 /** Copyright Steve Jin 2013 */
 import java.io.ByteArrayOutputStream;
@@ -16,10 +16,10 @@ public class JGitDiff
 {
   public static void main(String[] args) throws Exception
   {
-    File gitWorkDir = new File("C:/temp/gittest/");
+    File gitWorkDir = new File("/home/aahmed/workspace/turn");
     Git git = Git.open(gitWorkDir);
  
-    String oldHash = "d7db296cc2730ca562f91cfa539d6955a21284b6";
+    String oldHash = "65f491fac523af374d16a8f7b0d1698e2f33365d";
  
     ObjectId headId = git.getRepository().resolve("HEAD^{tree}");
     ObjectId oldId = git.getRepository().resolve(oldHash + "^{tree}");

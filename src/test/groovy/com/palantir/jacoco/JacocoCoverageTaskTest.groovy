@@ -17,8 +17,13 @@
 package com.palantir.jacoco
 
 import com.google.common.io.Resources
-import spock.lang.Specification
+import com.gradle.jacoco.gitdiff.CoverageRealm;
+import com.gradle.jacoco.gitdiff.CoverageType;
+import com.gradle.jacoco.gitdiff.CoverageViolation;
+import com.gradle.jacoco.gitdiff.JacocoCoverageExtension;
+import com.gradle.jacoco.gitdiff.JacocoCoverageTask;
 
+import spock.lang.Specification
 import static org.hamcrest.Matchers.containsInAnyOrder
 import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertThat

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.palantir.jacoco;
+package com.gradle.jacoco.gitdiff;
 
 public enum CoverageRealm {
     FILE("sourcefile", "fileThreshold"),

@@ -21,6 +21,8 @@ import nebula.test.IntegrationSpec
 import java.nio.file.Files
 import java.nio.file.Paths
 
+import com.gradle.jacoco.gitdiff.JacocoCoverageTask;
+
 class JacocoFullReportPluginTest extends IntegrationSpec {
 
     def standardBuildFile = '''

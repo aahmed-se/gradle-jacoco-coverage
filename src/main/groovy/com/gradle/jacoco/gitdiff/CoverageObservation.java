@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.palantir.jacoco
+package com.gradle.jacoco.gitdiff;
 
-public class JacocoFullReportExtension {
+import java.util.EnumMap;
 
-    public List<String> excludeProjects = new ArrayList<>()
-
-    /**
-     * Adds the given projects to the list of projects that should not be included in the coverage report.
-     */
-    def excludeProject(String... projects) {
-        excludeProjects.addAll(projects)
+/**
+ * The coverage observations (e.g., as extracted from the Jacoco XML report) for one scope.
+ */
+public final class CoverageObservation extends EnumMap<CoverageType, CoverageCounter> {
+    public CoverageObservation() {
+        super(CoverageType.class);
     }
 }

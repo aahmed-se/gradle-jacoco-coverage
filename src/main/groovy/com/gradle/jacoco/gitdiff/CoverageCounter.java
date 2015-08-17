@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package com.palantir.jacoco
-
-import groovy.transform.EqualsAndHashCode
+package com.gradle.jacoco.gitdiff;
 
 /**
- * A coverage violation observed for the given {@code clazz}.
+ * Holds the coverage observations for a single scope and coverage type.
  */
-@EqualsAndHashCode
-public class CoverageViolation {
-    String clazz
-    int covered
-    double threshold
-    int total
-    CoverageType type
+public final class CoverageCounter {
+    private final int covered;
+    private final int missed;
 
-    public CoverageViolation(String clazz, int covered, double threshold, int total, CoverageType type) {
-        this.clazz = clazz
-        this.threshold = threshold
-        this.type = type
-        this.covered = covered
-        this.total = total
+    CoverageCounter(int covered, int missed) {
+        this.covered = covered;
+        this.missed = missed;
+    }
+
+    public int getCovered() {
+        return covered;
+    }
+
+    public int getMissed() {
+        return missed;
     }
 
     @Override
     public String toString() {
-        return String.format("%s (%d/%d %s coverage < %g)", clazz, covered, total, type, threshold)
+        return String.format("Covered: %d, Missed: %d", covered, missed);
     }
 }

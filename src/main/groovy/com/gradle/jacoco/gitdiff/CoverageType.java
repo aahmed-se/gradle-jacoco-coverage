@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.palantir.jacoco;
+package com.gradle.jacoco.gitdiff;
 
 /**
  * An enumeration of the coverage types used in Jacoco's XML reports.

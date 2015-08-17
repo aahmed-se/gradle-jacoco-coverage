@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.palantir.jacoco
+package com.gradle.jacoco.gitdiff
 
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.Multimap

@@ -14,30 +14,16 @@
  * limitations under the License.
  */
 
-package com.palantir.jacoco;
+package com.gradle.jacoco.gitdiff
 
-/**
- * Holds the coverage observations for a single scope and coverage type.
- */
-public final class CoverageCounter {
-    private final int covered;
-    private final int missed;
+public class JacocoFullReportExtension {
 
-    CoverageCounter(int covered, int missed) {
-        this.covered = covered;
-        this.missed = missed;
-    }
+    public List<String> excludeProjects = new ArrayList<>()
 
-    public int getCovered() {
-        return covered;
-    }
-
-    public int getMissed() {
-        return missed;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Covered: %d, Missed: %d", covered, missed);
+    /**
+     * Adds the given projects to the list of projects that should not be included in the coverage report.
+     */
+    def excludeProject(String... projects) {
+        excludeProjects.addAll(projects)
     }
 }
