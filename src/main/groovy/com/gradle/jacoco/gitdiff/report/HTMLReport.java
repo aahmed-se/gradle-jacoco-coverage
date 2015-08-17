@@ -27,8 +27,7 @@
 package com.gradle.jacoco.gitdiff.report;
 
 import com.gradle.jacoco.gitdiff.coveragedata.*;
-import net.sourceforge.cobertura.reporting.ComplexityCalculator;
-import net.sourceforge.cobertura.reporting.html.files.CopyFiles;
+//import net.sourceforge.cobertura.reporting.ComplexityCalculator;
 import com.gradle.jacoco.gitdiff.coveragedata.util.*;
 
 import java.io.*;
@@ -48,7 +47,7 @@ public class HTMLReport {
 
 	private FileFinder finder;
 
-	private ComplexityCalculator complexity;
+	//private ComplexityCalculator complexity;
 
 	private ProjectData projectData;
 
@@ -60,11 +59,11 @@ public class HTMLReport {
 	 * @param encoding
 	 */
 	public HTMLReport(ProjectData projectData, File outputDir,
-			FileFinder finder, ComplexityCalculator complexity, String encoding)
+			FileFinder finder, String encoding)
 			throws Exception {
 		this.destinationDir = outputDir;
 		this.finder = finder;
-		this.complexity = complexity;
+		//this.complexity = complexity;
 		this.projectData = projectData;
 		this.encoding = encoding;
 
@@ -603,13 +602,13 @@ public class HTMLReport {
 
 	private String generateTableRowForTotal() {
 		StringBuffer ret = new StringBuffer();
-		double ccn = complexity.getCCNForProject(projectData);
+		//double ccn = complexity.getCCNForProject(projectData);
 
 		ret.append("  <tr>");
 		ret.append("<td><b>All Packages</b></td>");
 		ret.append("<td class=\"value\">" + projectData.getNumberOfClasses()
 				+ "</td>");
-		ret.append(generateTableColumnsFromData(projectData, ccn));
+		ret.append(generateTableColumnsFromData(projectData));
 		ret.append("</tr>");
 		return ret.toString();
 	}
@@ -618,7 +617,7 @@ public class HTMLReport {
 		StringBuffer ret = new StringBuffer();
 		String url1 = "frame-summary-" + packageData.getName() + ".html";
 		String url2 = "frame-sourcefiles-" + packageData.getName() + ".html";
-		double ccn = complexity.getCCNForPackage(packageData);
+		//double ccn = complexity.getCCNForPackage(packageData);
 
 		ret.append("  <tr>");
 		ret.append("<td><a href=\"" + url1
@@ -626,7 +625,7 @@ public class HTMLReport {
 				+ "\"'>" + generatePackageName(packageData) + "</a></td>");
 		ret.append("<td class=\"value\">" + packageData.getNumberOfChildren()
 				+ "</td>");
-		ret.append(generateTableColumnsFromData(packageData, ccn));
+		ret.append(generateTableColumnsFromData(packageData));
 		ret.append("</tr>");
 		return ret.toString();
 	}
@@ -635,28 +634,27 @@ public class HTMLReport {
 		StringBuffer ret = new StringBuffer();
 		String sourceFileName = sourceFileData.getNormalizedName();
 		// TODO: ccn should be calculated per-class, not per-file
-		double ccn = complexity.getCCNForSourceFile(sourceFileData);
+		//double ccn = complexity.getCCNForSourceFile(sourceFileData);
 
 		Iterator iter = sourceFileData.getClasses().iterator();
 		while (iter.hasNext()) {
 			ClassData classData = (ClassData) iter.next();
 			ret
-					.append(generateTableRowForClass(classData, sourceFileName,
-							ccn));
+					.append(generateTableRowForClass(classData, sourceFileName));
 		}
 
 		return ret.toString();
 	}
 
 	private String generateTableRowForClass(ClassData classData,
-			String sourceFileName, double ccn) {
+			String sourceFileName) {
 		StringBuffer ret = new StringBuffer();
 
 		ret.append("  <tr>");
 		// TODO: URL should jump straight to the class (only for inner classes?)
 		ret.append("<td><a href=\"" + sourceFileName + ".html\">"
 				+ classData.getBaseName() + "</a></td>");
-		ret.append(generateTableColumnsFromData(classData, ccn));
+		ret.append(generateTableColumnsFromData(classData));
 		ret.append("</tr>\n");
 		return ret.toString();
 	}
@@ -673,7 +671,7 @@ public class HTMLReport {
 	 * @return A string containing the HTML for three table cells.
 	 */
 	private static String generateTableColumnsFromData(
-			CoverageData coverageData, double ccn) {
+			CoverageData coverageData) {
 		int numLinesCovered = coverageData.getNumberOfCoveredLines();
 		int numLinesValid = coverageData.getNumberOfValidLines();
 		int numBranchesCovered = coverageData.getNumberOfCoveredBranches();
@@ -684,8 +682,8 @@ public class HTMLReport {
 		return "<td>" + generatePercentResult(numLinesCovered, numLinesValid)
 				+ "</td><td>"
 				+ generatePercentResult(numBranchesCovered, numBranchesValid)
-				+ "</td><td class=\"value\"><span class=\"hidden\">" + ccn
-				+ ";</span>" + getDoubleValue(ccn) + "</td>";
+				+ "</td><td class=\"value\"><span class=\"hidden\">" + 0.0
+				+ ";</span>" + getDoubleValue(0.0) + "</td>";
 	}
 
 	/**

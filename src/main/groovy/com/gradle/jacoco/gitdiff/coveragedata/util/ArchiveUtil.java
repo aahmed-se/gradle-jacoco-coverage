@@ -29,7 +29,7 @@ package com.gradle.jacoco.gitdiff.coveragedata.util;
 
 import com.gradle.jacoco.gitdiff.coveragedata.CoverageDataFileHandler;
 import com.gradle.jacoco.gitdiff.coveragedata.ProjectData;
-import com.gradle.jacoco.gitdiff.coveragedata.TouchCollector;
+//import com.gradle.jacoco.gitdiff.coveragedata.TouchCollector;
 
 import java.io.File;
 import java.util.List;

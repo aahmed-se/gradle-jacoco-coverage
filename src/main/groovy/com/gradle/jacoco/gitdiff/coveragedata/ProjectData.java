@@ -268,7 +268,7 @@ public class ProjectData extends CoverageDataContainer {
 		} catch (InterruptedException e) {
 		}
 
-		TouchCollector.applyTouchesOnProjectData(projectDataToSave);
+		//TouchCollector.applyTouchesOnProjectData(projectDataToSave);
 
 		// Get a file lock
 		File dataFile = CoverageDataFileHandler.getDefaultDataFile();
