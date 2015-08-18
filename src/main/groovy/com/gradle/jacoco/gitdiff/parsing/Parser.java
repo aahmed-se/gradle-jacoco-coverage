@@ -6,123 +6,122 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 public class Parser {
-    private final Coverage.Builder builder = Coverage.Builder.get();
+	private final Coverage.Builder builder = Coverage.Builder.get();
 
-    private final XmlPullParserFactory parserFactory;
+	private HashMap<String, LinkedHashSet<Integer>> coverageInfo = new HashMap<String, LinkedHashSet<Integer>>();
 
-    public Parser() throws XmlPullParserException {
-        parserFactory = parserFactory();
-    }
+	private final XmlPullParserFactory parserFactory;
 
-    private static XmlPullParserFactory parserFactory() throws XmlPullParserException {
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        factory.setValidating(false);
+	public Parser() throws XmlPullParserException {
+		parserFactory = parserFactory();
+	}
 
-        return factory;
-    }
+	private static XmlPullParserFactory parserFactory()
+			throws XmlPullParserException {
+		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+		factory.setNamespaceAware(true);
+		factory.setValidating(false);
 
-    public Coverage parse(String reportName) throws XmlPullParserException, IOException {
-        FileInputStream fileInput = new FileInputStream(new File(reportName));
-        BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
+		return factory;
+	}
 
-        try {
-            XmlPullParser parser = parserFactory.newPullParser();
-            parser.setInput(bufferedInput, null);
+	public Coverage parse(String reportName) throws XmlPullParserException,
+	IOException {
+		FileInputStream fileInput = new FileInputStream(new File(reportName));
+		BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
 
-            while (XmlPullParser.END_DOCUMENT != parser.nextToken()) {
-                int eventType = parser.getEventType();
-                String name = parser.getName();
+		try {
+			XmlPullParser parser = parserFactory.newPullParser();
+			parser.setInput(bufferedInput, null);
 
-                switch (eventType) {
-                case XmlPullParser.START_TAG:
-                    if ("package".equalsIgnoreCase(name)) {
-                    	handleParser(parser);
+			while (XmlPullParser.END_DOCUMENT != parser.nextToken()) {
+				int eventType = parser.getEventType();
+				String name = parser.getName();
 
-                    } else if ("counter".equalsIgnoreCase(name)) {
-                        handleCounter(parser);
-                    }
-                    break;
-                }
-            }
+				switch (eventType) {
+				case XmlPullParser.START_TAG:
+					if ("package".equalsIgnoreCase(name)) {
+						handleParser(parser);
+					}
+					break;
+				}
+			}
 
-        } finally {
-            bufferedInput.close();
-        }
+		} finally {
+			bufferedInput.close();
+		}
+		
+		for (Map.Entry<String, LinkedHashSet<Integer>> entry : coverageInfo.entrySet()) {
+		    System.out.println(entry.getKey() + " -- " + entry.getValue());
 
-        return builder.build();
-    }
-
-    private static void skipPackage(XmlPullParser parser) throws XmlPullParserException, IOException {
-        while (isPackageEnd(parser)) {
-            parser.nextToken();
-        }
-    }
-
-    private static boolean isPackageEnd(XmlPullParser parser) throws XmlPullParserException {
-        return XmlPullParser.END_TAG == parser.getEventType() && "package".equalsIgnoreCase(parser.getName());
-        //return true;
-    }
-
-    private void handleCounter(XmlPullParser parser) {
-        String type = parser.getAttributeValue(null, "type");
-        //System.out.println(type);
-        
-        int covered = parseInt(parser.getAttributeValue(null, "covered"));
-        int missed = parseInt(parser.getAttributeValue(null, "missed"));
-        Metric metric = new Metric(covered, missed);
-
-        if ("INSTRUCTION".equalsIgnoreCase(type)) {
-            builder.instructions(metric);
-        } else if ("LINE".equalsIgnoreCase(type)) {
-        	//System.out.println(type);
-            builder.lines(metric);
-        } else if ("COMPLEXITY".equalsIgnoreCase(type)) {
-            builder.branches(metric);
-        } else if ("METHOD".equalsIgnoreCase(type)) {
-            builder.methods(metric);
-        } else if ("CLASS".equalsIgnoreCase(type)) {
-            builder.classes(metric);
-        }
-    }
-    
-    private void handleParser(XmlPullParser parser) {
-        String type = parser.getAttributeValue(null, "name");
-        System.out.println(type);
-        try {
-			parser.nextToken();
-	        String name = parser.getAttributeValue(null, "name");
-	        System.out.println("class: "+name);
-		} catch (XmlPullParserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
-        
-//        int covered = parseInt(parser.getAttributeValue(null, "covered"));
-//        int missed = parseInt(parser.getAttributeValue(null, "missed"));
-//        Metric metric = new Metric(covered, missed);
-//
-//        if ("INSTRUCTION".equalsIgnoreCase(type)) {
-//            builder.instructions(metric);
-//        } else if ("LINE".equalsIgnoreCase(type)) {
-//        	//System.out.println(type);
-//            builder.lines(metric);
-//        } else if ("COMPLEXITY".equalsIgnoreCase(type)) {
-//            builder.branches(metric);
-//        } else if ("METHOD".equalsIgnoreCase(type)) {
-//            builder.methods(metric);
-//        } else if ("CLASS".equalsIgnoreCase(type)) {
-//            builder.classes(metric);
-//        }
-    }
+		return builder.build();
+	}
+
+	private static boolean isPackageEnd(XmlPullParser parser)
+			throws XmlPullParserException {
+		return XmlPullParser.END_TAG == parser.getEventType()
+				&& "package".equalsIgnoreCase(parser.getName());
+	}
+
+	private static boolean isSourceFileEnd(XmlPullParser parser)
+			throws XmlPullParserException {
+		return XmlPullParser.END_TAG == parser.getEventType()
+				&& "sourcefile".equalsIgnoreCase(parser.getName());
+	}
+
+	private void handleParser(XmlPullParser parser)
+			throws XmlPullParserException, IOException {
+		String type = parser.getAttributeValue(null, "name");
+		System.out.println("Package Name: " + type);
+		while (!isPackageEnd(parser)) {
+			parser.nextToken();
+			if (parser.getEventType() == XmlPullParser.START_TAG) {
+				String name = parser.getName();
+				if ("SOURCEFILE".equalsIgnoreCase(name)) {
+					handleSourceFile(parser,type);
+				}
+			}
+
+		}
+	}
+
+	private void handleSourceFile(XmlPullParser parser,String packageName)
+			throws XmlPullParserException, IOException {
+		String type = parser.getAttributeValue(null, "name");
+		System.out.println("Sourcefile Name:" + type);
+
+		String scopedName = packageName + "/" + type;
+		if (!coverageInfo.containsKey(type)) {
+			coverageInfo.put(scopedName, new LinkedHashSet<Integer>());
+		}
+		while (!isSourceFileEnd(parser)) {
+			parser.nextToken();
+			if (parser.getEventType() == XmlPullParser.START_TAG) {
+				String name = parser.getName();
+				if ("Line".equalsIgnoreCase(name)) {
+					int lineNum = parseInt(parser.getAttributeValue(null, "nr"));
+					int covered = parseInt(parser.getAttributeValue(null, "ci"));
+
+					if (covered > 0) {
+						coverageInfo.get(scopedName).add(lineNum);
+					}
+
+				}
+			}
+
+		}
+
+	}
+
 }

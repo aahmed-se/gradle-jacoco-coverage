@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-public class Driver1 {
+public class TestDriver {
 
 	public static void main(String[] args) throws XmlPullParserException, IOException {
 		Parser temp = new Parser();
