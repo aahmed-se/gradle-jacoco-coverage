@@ -43,7 +43,7 @@ public class Parser {
                 switch (eventType) {
                 case XmlPullParser.START_TAG:
                     if ("package".equalsIgnoreCase(name)) {
-                        skipPackage(parser);
+                    	handleParser(parser);
 
                     } else if ("counter".equalsIgnoreCase(name)) {
                         handleCounter(parser);
@@ -67,11 +67,13 @@ public class Parser {
 
     private static boolean isPackageEnd(XmlPullParser parser) throws XmlPullParserException {
         return XmlPullParser.END_TAG == parser.getEventType() && "package".equalsIgnoreCase(parser.getName());
+        //return true;
     }
 
     private void handleCounter(XmlPullParser parser) {
         String type = parser.getAttributeValue(null, "type");
-
+        //System.out.println(type);
+        
         int covered = parseInt(parser.getAttributeValue(null, "covered"));
         int missed = parseInt(parser.getAttributeValue(null, "missed"));
         Metric metric = new Metric(covered, missed);
@@ -79,6 +81,7 @@ public class Parser {
         if ("INSTRUCTION".equalsIgnoreCase(type)) {
             builder.instructions(metric);
         } else if ("LINE".equalsIgnoreCase(type)) {
+        	//System.out.println(type);
             builder.lines(metric);
         } else if ("COMPLEXITY".equalsIgnoreCase(type)) {
             builder.branches(metric);
@@ -87,5 +90,39 @@ public class Parser {
         } else if ("CLASS".equalsIgnoreCase(type)) {
             builder.classes(metric);
         }
+    }
+    
+    private void handleParser(XmlPullParser parser) {
+        String type = parser.getAttributeValue(null, "name");
+        System.out.println(type);
+        try {
+			parser.nextToken();
+	        String name = parser.getAttributeValue(null, "name");
+	        System.out.println("class: "+name);
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        
+//        int covered = parseInt(parser.getAttributeValue(null, "covered"));
+//        int missed = parseInt(parser.getAttributeValue(null, "missed"));
+//        Metric metric = new Metric(covered, missed);
+//
+//        if ("INSTRUCTION".equalsIgnoreCase(type)) {
+//            builder.instructions(metric);
+//        } else if ("LINE".equalsIgnoreCase(type)) {
+//        	//System.out.println(type);
+//            builder.lines(metric);
+//        } else if ("COMPLEXITY".equalsIgnoreCase(type)) {
+//            builder.branches(metric);
+//        } else if ("METHOD".equalsIgnoreCase(type)) {
+//            builder.methods(metric);
+//        } else if ("CLASS".equalsIgnoreCase(type)) {
+//            builder.classes(metric);
+//        }
     }
 }
