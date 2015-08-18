@@ -10,7 +10,7 @@ public class TestDriver {
 		Parser temp = new Parser();
 		Coverage temp1 = temp.parse("/home/aahmed/workspace/turn/modules/datamine/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml");
 		
-		System.out.println(temp1);
+		//System.out.println(temp1);
 
 	}
 

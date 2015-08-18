@@ -26,7 +26,8 @@
 
 package com.gradle.jacoco.gitdiff.report;
 
-import com.gradle.jacoco.gitdiff.coveragedata.*;
+//import com.gradle.jacoco.gitdiff.coveragedata.*;
+import com.gradle.jacoco.gitdiff.coveragedata2.*;
 //import net.sourceforge.cobertura.reporting.ComplexityCalculator;
 import com.gradle.jacoco.gitdiff.coveragedata.util.*;
 
